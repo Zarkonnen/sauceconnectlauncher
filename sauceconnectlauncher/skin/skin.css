@@ -1,0 +1,11 @@
+.toolbar-off {
+	list-style-image: URL("chrome://sauceconnectlauncher/skin/status-bar-off.png");
+}
+
+.toolbar-on {
+	list-style-image: URL("chrome://sauceconnectlauncher/skin/status-bar.png");
+}
+
+#sauceConnectLauncher-status-bar-icon {
+  margin-top: 1px;
+}

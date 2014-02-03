@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://sauceconnectlauncher/skin/skin.css" type="text/css"?>
+<!DOCTYPE sauceconnectlauncher SYSTEM "chrome://sauceconnectlauncher/locale/translations.dtd">
+<overlay id="sample" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="strings" src="chrome://sauceconnectlauncher/locale/strings.properties" />
+  </stringbundleset>
+
+	<script src="sauceconnectlauncher.js" />
+
+	<menupopup id="appmenu_webDeveloper_popup">
+		<menuitem label="&activatesauceconnect;" id="sauceConnectLauncher-appmenuitem" key="sauceConnectLauncher-run-key" oncommand="sauceConnectLauncher.run()"/>
+	</menupopup>
+	
+	<menupopup id="menuWebDeveloperPopup">
+		<menuitem label="&activatesauceconnect;" id="sauceConnectLauncher-menuitem" key="sauceConnectLauncher-run-key" oncommand="sauceConnectLauncher.run()"/>
+	</menupopup>
+
+	<keyset>
+		<key id="sauceConnectLauncher-run-key" modifiers="accel alt shift" key="C" oncommand="sauceConnectLauncher.run()"/>
+	</keyset>
+
+	<statusbar id="status-bar">
+		<statusbarpanel id="sauceConnectLauncher-status-bar-icon" class="statusbarpanel-iconic" src="chrome://sauceconnectlauncher/skin/status-bar-off.png" tooltiptext="&activatesauceconnect;" onclick="sauceConnectLauncher.run()" />
+	</statusbar>
+
+	<toolbarpalette id="BrowserToolbarPalette">
+		<toolbarbutton id="sauceConnectLauncher-toolbar-button" class="toolbar-off" label="Sauce Connect" tooltiptext="&activatesauceconnect;" oncommand="sauceConnectLauncher.run()"/>
+	</toolbarpalette>
+</overlay>

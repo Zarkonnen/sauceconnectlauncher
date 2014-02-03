@@ -1,0 +1,8 @@
+content     sauceconnectlauncher    chrome/content/
+content     sauceconnectlauncher    chrome/content/ contentaccessible=yes
+overlay chrome://browser/content/browser.xul chrome://sauceconnectlauncher/content/browser.xul
+
+locale	sauceconnectlauncher	en-US	locale/en-US/
+
+skin	sauceconnectlauncher	classic/1.0	skin/
+style	chrome://global/content/customizeToolbar.xul	chrome://sauceconnectlauncher/skin/skin.css
