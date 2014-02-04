@@ -23,41 +23,28 @@ function start() {
 
 function stop() {
   stopExecutable();
-  //uiShowNotRunning();
-  //active = false;
 }
 
 function getExecutableFile() {
-  return myAddon.getResourceURI("/chrome/content/run.sh").QueryInterface(Components.interfaces.nsIFileURL).file;
-  /*var f = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-  f.initWithPath("/Applications/Chess.app/Contents/MacOS/Chess");
-  return f;*/
-}
-
-function getExecutableFile2() {
-  return myAddon.getResourceURI("/chrome/content/Sauce-Connect.jar").QueryInterface(Components.interfaces.nsIFileURL).file;
+  return myAddon.getResourceURI("/chrome/content/sc").QueryInterface(Components.interfaces.nsIFileURL).file;
 }
 
 function startExecutable() {
   obs = {
     observe: function(a, b, c) {
-      alert(a + " / " + b + " / " + c);
       uiShowNotRunning();
       proc = null;
       obs = null;
       active = false;
     }
   };
-  var sh = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-  sh.initWithPath("/bin/sh");
   proc = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
-  proc.init(sh);
-  proc.runAsync([getExecutableFile().path, getExecutableFile2().path, prompt("Username?"), prompt("Access key?")], 4, obs);
+  proc.init(getExecutableFile());
+  proc.runAsync(["-u", prompt("Username?"), "-k", prompt("Access key?")], 4, obs);
 }
 
 function stopExecutable() {
   if (proc != null) {
-    alert("Stopping!");
     proc.kill();
   }
 }
