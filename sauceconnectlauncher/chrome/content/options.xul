@@ -25,8 +25,8 @@
       <caption label="Sauce Account"/>
       <grid>
         <columns>
-          <column flex="1"/>
-          <column flex="1"/>
+          <column flex="1" align="end"/>
+          <column flex="4"/>
         </columns>
         <rows>
           <row>
@@ -44,8 +44,8 @@
       <caption label="Tunnel Settings"/>
       <grid>
         <columns>
-          <column flex="1"/>
-          <column flex="1"/>
+          <column flex="1" align="baseline"/>
+          <column flex="4"/>
         </columns>
         <rows>
           <row>
@@ -71,8 +71,8 @@
       <caption label="Domains"/>
       <grid>
         <columns>
-          <column flex="1"/>
-          <column flex="1"/>
+          <column flex="1" align="baseline"/>
+          <column flex="4" align="baseline"/>
         </columns>
         <rows>
           <row>
@@ -94,8 +94,8 @@
       <caption label="Proxies"/>
       <grid>
         <columns>
-          <column flex="1"/>
-          <column flex="1"/>
+          <column flex="1" align="end"/>
+          <column flex="4" align="baseline"/>
         </columns>
         <rows>
           <row>
