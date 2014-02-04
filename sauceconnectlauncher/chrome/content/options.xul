@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="Sauce Connect Preferences">
+  <prefpane label="Sauce Connect Preferences">
+    <preferences>
+      <preference id="sauceconnectlauncher-accountname" name="extensions.sauceconnectlauncher.accountname" type="string"/>
+      <preference id="sauceconnectlauncher-accesskey" name="extensions.sauceconnectlauncher.accesskey" type="string"/>
+      
+      <preference id="sauceconnectlauncher-tunnelidentifier" name="extensions.sauceconnectlauncher.tunnelidentifier" type="string"/>
+      <preference id="sauceconnectlauncher-seport" name="extensions.sauceconnectlauncher.seport" type="int"/>
+      <preference id="sauceconnectlauncher-sharedtunnel" name="extensions.sauceconnectlauncher.sharedtunnel" type="bool"/>
+      <preference id="sauceconnectlauncher-resturl" name="extensions.sauceconnectlauncher.resturl" type="string"/>
+
+      <preference id="sauceconnectlauncher-sslbumpdomains" name="extensions.sauceconnectlauncher.sslbumpdomains" type="string"/>
+      <preference id="sauceconnectlauncher-directdomains" name="extensions.sauceconnectlauncher.directdomains" type="string"/>
+      <preference id="sauceconnectlauncher-fastfailregexps" name="extensions.sauceconnectlauncher.fastfailregexps" type="string"/>
+
+      <preference id="sauceconnectlauncher-proxyhost" name="extensions.sauceconnectlauncher.proxyhost" type="string"/>
+      <preference id="sauceconnectlauncher-proxyport" name="extensions.sauceconnectlauncher.proxyport" type="int"/>
+      <preference id="sauceconnectlauncher-proxyuser" name="extensions.sauceconnectlauncher.proxyuser" type="string"/>
+      <preference id="sauceconnectlauncher-proxypassword" name="extensions.sauceconnectlauncher.proxypassword" type="string"/>
+
+    </preferences>
+    <groupbox>
+      <caption label="Sauce Account"/>
+      <grid>
+        <columns>
+          <column flex="1"/>
+          <column flex="1"/>
+        </columns>
+        <rows>
+          <row>
+            <label control="accountname" value="Account Name"/>
+            <textbox id="accountname" preference="sauceconnectlauncher-accountname"/>
+          </row>
+          <row>
+            <label control="accesskey" value="Access Key"/>
+            <textbox id="accesskey" preference="sauceconnectlauncher-accesskey"/>
+          </row>
+        </rows>
+      </grid>
+    </groupbox>
+    <groupbox>
+      <caption label="Tunnel Settings"/>
+      <grid>
+        <columns>
+          <column flex="1"/>
+          <column flex="1"/>
+        </columns>
+        <rows>
+          <row>
+            <label control="tunnelidentifier" value="Tunnel Identifier"/>
+            <textbox id="tunnelidentifier" preference="sauceconnectlauncher-tunnelidentifier"/>
+          </row>
+          <row>
+            <label control="seport" value="Selenium Port"/>
+            <textbox id="seport" preference="sauceconnectlauncher-seport"/>
+          </row>
+          <row>
+            <label control="sharedtunnel" value="Shared Tunnel"/>
+            <checkbox id="sharedtunnel" preference="sauceconnectlauncher-sharedtunnel"/>
+          </row>
+          <row>
+            <label control="resturl" value="REST URL"/>
+            <textbox id="resturl" preference="sauceconnectlauncher-resturl"/>
+          </row>
+        </rows>
+      </grid>
+    </groupbox>
+    <groupbox>
+      <caption label="Domains"/>
+      <grid>
+        <columns>
+          <column flex="1"/>
+          <column flex="1"/>
+        </columns>
+        <rows>
+          <row>
+            <label control="sslbumpdomains" value="SSL Bump Domains"/>
+            <textbox id="sslbumpdomains" preference="sauceconnectlauncher-sslbumpdomains"/>
+          </row>
+          <row>
+            <label control="directdomains" value="Direct Domains"/>
+            <textbox id="directdomains" preference="sauceconnectlauncher-directdomains"/>
+          </row>
+          <row>
+            <label control="fastfailregexps" value="Fast Fail Regexps"/>
+            <textbox id="fastfailregexps" preference="sauceconnectlauncher-fastfailregexps"/>
+          </row>
+        </rows>
+      </grid>
+    </groupbox>
+    <groupbox>
+      <caption label="Proxies"/>
+      <grid>
+        <columns>
+          <column flex="1"/>
+          <column flex="1"/>
+        </columns>
+        <rows>
+          <row>
+            <label control="proxyhost" value="Proxy Host"/>
+            <textbox id="proxyhost" preference="sauceconnectlauncher-proxyhost"/>
+          </row>
+          <row>
+            <label control="proxyport" value="Proxy Port"/>
+            <textbox id="proxyport" preference="sauceconnectlauncher-proxyport"/>
+          </row>
+          <row>
+            <label control="proxyuser" value="Proxy Username"/>
+            <textbox id="proxyuser" preference="sauceconnectlauncher-proxyuser"/>
+          </row>
+          <row>
+            <label control="proxypassword" value="Proxy Password"/>
+            <textbox id="proxypassword" preference="sauceconnectlauncher-proxypassword"/>
+          </row>
+        </rows>
+      </grid>
+    </groupbox>
+  </prefpane>
+</prefwindow>
+
