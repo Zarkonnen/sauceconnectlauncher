@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE sauceconnectlauncher SYSTEM "chrome://sauceconnectlauncher/locale/translations.dtd">
+<prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="Sauce Connect Preferences">
+  <prefpane label="Sauce Connect Preferences">
+    <preferences>
+      <preference id="sauceconnectlauncher-accountname" name="extensions.sauceconnectlauncher.accountname" type="string"/>
+      <preference id="sauceconnectlauncher-accesskey" name="extensions.sauceconnectlauncher.accesskey" type="string"/>
+      
+      <preference id="sauceconnectlauncher-tunnelidentifier" name="extensions.sauceconnectlauncher.tunnelidentifier" type="string"/>
+      <preference id="sauceconnectlauncher-seport" name="extensions.sauceconnectlauncher.seport" type="int"/>
+      <preference id="sauceconnectlauncher-sharedtunnel" name="extensions.sauceconnectlauncher.sharedtunnel" type="bool"/>
+      <preference id="sauceconnectlauncher-resturl" name="extensions.sauceconnectlauncher.resturl" type="string"/>
+
+      <preference id="sauceconnectlauncher-nosslbumpdomains" name="extensions.sauceconnectlauncher.nosslbumpdomains" type="string"/>
+      <preference id="sauceconnectlauncher-directdomains" name="extensions.sauceconnectlauncher.directdomains" type="string"/>
+      <preference id="sauceconnectlauncher-fastfailregexps" name="extensions.sauceconnectlauncher.fastfailregexps" type="string"/>
+
+      <preference id="sauceconnectlauncher-proxyhost" name="extensions.sauceconnectlauncher.proxyhost" type="string"/>
+      <preference id="sauceconnectlauncher-proxyport" name="extensions.sauceconnectlauncher.proxyport" type="int"/>
+      <preference id="sauceconnectlauncher-proxyuser" name="extensions.sauceconnectlauncher.proxyuser" type="string"/>
+      <preference id="sauceconnectlauncher-proxypassword" name="extensions.sauceconnectlauncher.proxypassword" type="string"/>
+
+    </preferences>
+    <tabbox>
+      <tabs>
+        <tab label="&sauceaccount;"/>
+        <tab label="&tunnel;"/>
+        <tab label="&domains;"/>
+        <tab label="Proxy"/>
+      </tabs>
+      <tabpanels>
+        <tabpanel id="sauceconnectlauncher-basic">
+          <grid>
+            <columns>
+              <column flex="1"/>
+              <column flex="4"/>
+            </columns>
+            <rows>
+              <row>
+                <label control="accountname" value="&accountname;*" style="font-weight: bold; text-align: right; margin-top: 0.4em;" tooltiptext="&accountname_tt;"/>
+                <textbox id="accountname" preference="sauceconnectlauncher-accountname"/>
+              </row>
+              <row>
+                <label control="accesskey" value="&accesskey;*" tooltiptext="&accesskey_tt;" style="font-weight: bold; text-align: right; margin-top: 0.4em;"/>
+                <textbox id="accesskey" preference="sauceconnectlauncher-accesskey"/>
+              </row>
+            </rows>
+          </grid>
+        </tabpanel>
+        <tabpanel id="sauceconnectlauncher-tunnel">
+          <grid>
+            <columns>
+              <column flex="1"/>
+              <column flex="4"/>
+            </columns>
+            <rows>
+              <row>
+                <label control="tunnelidentifier" value="&tunnelidentifier;" tooltiptext="&tunnelidentifier_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <textbox id="tunnelidentifier" preference="sauceconnectlauncher-tunnelidentifier"/>
+              </row>
+              <row>
+                <label control="seport" value="&seleniumport;" tooltiptext="&seleniumport_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <textbox id="seport" preference="sauceconnectlauncher-seport"/>
+              </row>
+              <row>
+                <label control="sharedtunnel" value="&sharedtunnel;" tooltiptext="&sharedtunnel_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <checkbox id="sharedtunnel" preference="sauceconnectlauncher-sharedtunnel"/>
+              </row>
+              <row>
+                <label control="resturl" value="&resturl;" tooltiptext="&resturl_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <textbox id="resturl" preference="sauceconnectlauncher-resturl"/>
+              </row>
+            </rows>
+          </grid>
+        </tabpanel>
+        <tabpanel id="sauceconnectlauncher-domains">
+          <grid>
+            <columns>
+              <column flex="1"/>
+              <column flex="4"/>
+            </columns>
+            <rows>
+              <row>
+                <label control="nosslbumpdomains" value="&nosslbumpdomains;" tooltiptext="&nosslbumpdomains_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <textbox id="nosslbumpdomains" preference="sauceconnectlauncher-nosslbumpdomains" rows="5" multiline="true"/>
+              </row>
+              <row>
+                <label control="directdomains" value="&directdomains;" tooltiptext="&directdomains_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <textbox id="directdomains" preference="sauceconnectlauncher-directdomains" rows="5" multiline="true"/>
+              </row>
+              <row>
+                <label control="fastfailregexps" value="&fastfailregexps;" tooltiptext="&fastfailregexps_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <textbox id="fastfailregexps" preference="sauceconnectlauncher-fastfailregexps" rows="5" multiline="true"/>
+              </row>
+            </rows>
+          </grid>
+        </tabpanel>
+        <tabpanel id="sauceconnectlauncher-proxy">
+          <grid>
+            <columns>
+              <column flex="1"/>
+              <column flex="4"/>
+            </columns>
+            <rows>
+              <row>
+                <label control="proxyhost" value="&proxyhost;" tooltiptext="&proxyhost_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <textbox id="proxyhost" preference="sauceconnectlauncher-proxyhost"/>
+              </row>
+              <row>
+                <label control="proxyport" value="&proxyport;" tooltiptext="&proxyport_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <textbox id="proxyport" preference="sauceconnectlauncher-proxyport"/>
+              </row>
+              <row>
+                <label control="proxyuser" value="&proxyuser;" tooltiptext="&proxyuser_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <textbox id="proxyuser" preference="sauceconnectlauncher-proxyuser"/>
+              </row>
+              <row>
+                <label control="proxypassword" value="&proxypassword;" tooltiptext="&proxypassword_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <textbox id="proxypassword" preference="sauceconnectlauncher-proxypassword"/>
+              </row>
+            </rows>
+          </grid>
+        </tabpanel>
+      </tabpanels>
+    </tabbox>
+  </prefpane>
+</prefwindow>
+

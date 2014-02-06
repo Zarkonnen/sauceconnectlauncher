@@ -23,41 +23,72 @@ function start() {
 
 function stop() {
   stopExecutable();
-  //uiShowNotRunning();
-  //active = false;
 }
 
 function getExecutableFile() {
-  return myAddon.getResourceURI("/chrome/content/run.sh").QueryInterface(Components.interfaces.nsIFileURL).file;
-  /*var f = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-  f.initWithPath("/Applications/Chess.app/Contents/MacOS/Chess");
-  return f;*/
+  return myAddon.getResourceURI("/chrome/content/sc").QueryInterface(Components.interfaces.nsIFileURL).file;
 }
 
-function getExecutableFile2() {
-  return myAddon.getResourceURI("/chrome/content/Sauce-Connect.jar").QueryInterface(Components.interfaces.nsIFileURL).file;
+var prefs = Components.classes["@mozilla.org/preferences-service;1"]
+                    .getService(Components.interfaces.nsIPrefService);
+prefs = prefs.getBranch("extensions.sauceconnectlauncher.");
+
+function getArguments() {
+  if (prefs.getCharPref("accountname") == "" || prefs.getCharPref("accesskey") == "") {
+    var accountname = prompt(_("account_q"));
+    if (!accountname) { return null; }
+    prefs.setCharPref("accountname", accountname);
+    var accesskey = prompt(_("accesskey_q"));
+    if (!accesskey) { return null; }
+    prefs.setCharPref("accesskey", accesskey);
+  }
+  
+  var args = [ "-u", prefs.getCharPref("accountname"), "-k", prefs.getCharPref("accesskey") ];
+  var string_prefs_mapping = [
+    [ "tunnelidentifier", "-i" ],
+    [ "resturl", "-x" ],
+    [ "nosslbumpdomains", "-B" ],
+    [ "directdomains", "-D" ],
+    [ "fastfailregexps", "-F" ]
+  ];
+  string_prefs_mapping.forEach(function (m) {
+    if (prefs.getCharPref(m[0]) != "") {
+      args.push(m[1]);
+      args.push(prefs.getCharPref(m[0]));
+    }
+  });
+  if (prefs.getBoolPref("sharedtunnel")) {
+    args.push("-s");
+  }
+  if (prefs.getCharPref("proxyhost") != "" && prefs.getIntPref("proxyport") != 0) {
+    args.push("-p");
+    args.push(prefs.getCharPref("proxyhost") + ":" + prefs.getIntPref("proxyport"));
+  }
+  if (prefs.getCharPref("proxyuser") != "" && prefs.getCharPref("proxypassword") != "") {
+    args.push("-w");
+    args.push(prefs.getCharPref("proxyuser") + ":" + prefs.getCharPref("proxypassword"));
+  }
+  return args;
 }
 
 function startExecutable() {
+  var args = getArguments();
+  if (!args) { return; }
   obs = {
-    observe: function(a, b, c) {
-      alert(a + " / " + b + " / " + c);
+    observe: function() {
       uiShowNotRunning();
       proc = null;
       obs = null;
       active = false;
     }
   };
-  var sh = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-  sh.initWithPath("/bin/sh");
   proc = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
-  proc.init(sh);
-  proc.runAsync([getExecutableFile().path, getExecutableFile2().path, prompt("Username?"), prompt("Access key?")], 4, obs);
+  proc.init(getExecutableFile());
+  proc.runAsync(args, args.length, obs);
 }
 
 function stopExecutable() {
   if (proc != null) {
-    alert("Stopping!");
     proc.kill();
   }
 }

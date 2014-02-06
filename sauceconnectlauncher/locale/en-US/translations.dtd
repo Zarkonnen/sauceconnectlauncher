@@ -1,1 +1,35 @@
 <!ENTITY activatesauceconnect "Activate Sauce Connect">
+
+<!ENTITY sauceaccount "Sauce Account">
+<!ENTITY accountname "Account Name">
+<!ENTITY accountname_tt "Your Sauce Labs account name. Required field.">
+<!ENTITY accesskey "Access Key">
+<!ENTITY accesskey_tt "Your Sauce Labs access key, which you can find at saucelabs.com/account. Required field.">
+
+<!ENTITY tunnel "Tunnel">
+<!ENTITY tunnelidentifier "Tunnel Identifier">
+<!ENTITY tunnelidentifier_tt "Don't automatically assign jobs to this tunnel. Jobs will use it only by explicitly providing the right identifier.">
+<!ENTITY seleniumport "Selenium Port">
+<!ENTITY seleniumport_tt "Port on which Sauce Connect's Selenium relay will listen for requests. Selenium commands reaching Connect on this port will be relayed to Sauce Labs securely and reliably through Connect's tunnel.">
+<!ENTITY sharedtunnel "Shared Tunnel">
+<!ENTITY sharedtunnel_tt "Let sub-accounts of the tunnel owner use the tunnel if requested.">
+<!ENTITY resturl "REST URL">
+<!ENTITY resturl_tt "Advanced feature: Connect to Sauce REST API at alternative URL. Use only if directed to do so by Sauce Labs support.">
+
+<!ENTITY domains "Domains">
+<!ENTITY nosslbumpdomains "No SSL Bump Domains">
+<!ENTITY nosslbumpdomains_tt "Comma-separated list of domains. Requests whose host matches one of these will not be SSL re-encrypted.">
+<!ENTITY directdomains "Direct Domains">
+<!ENTITY directdomains_tt "Comma-separated list of domains. Requests whose host matches one of these will be relayed directly through the internet, instead of through the tunnel.">
+<!ENTITY fastfailregexps "Fast Fail Regexps">
+<!ENTITY fastfailregexps_tt "Comma-separated list of regular expressions. Requests matching one of these will get dropped instantly and will not go through the tunnel.">
+
+<!ENTITY proxy "Proxy">
+<!ENTITY proxyhost "Host">
+<!ENTITY proxyhost_tt "Proxy host that Sauce Connect should use to connect to the Sauce Labs cloud.">
+<!ENTITY proxyport "Port">
+<!ENTITY proxyport_tt "Proxy port that Sauce Connect should use to connect to the Sauce Labs cloud.">
+<!ENTITY proxyuser "Username">
+<!ENTITY proxyuser_tt "Username to access the proxy.">
+<!ENTITY proxypassword "Password">
+<!ENTITY proxypassword_tt "Password to access the proxy.">
