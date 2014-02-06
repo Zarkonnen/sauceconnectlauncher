@@ -1,11 +1,28 @@
 var sauceConnectLauncher = {};
 
-var active = false;
+var OFF = 0;
+var STARTING = 1;
+var ACTIVE = 2;
+var STOPPING = 3;
+
+var state = OFF;
 var proc = null;
 var obs = null;
 
+var readyFile = null;
+var readyFileLastModified = 0;
+var readyPoller = null;
+
 sauceConnectLauncher.run = function() {
-  if (!active) { start(); } else { stop(); }
+  switch (state) {
+    case OFF:
+      start();
+      break;
+    case STARTING:
+    case ACTIVE:
+      stop();
+      break;
+  }
 };
 
 var myAddon = null;
@@ -15,14 +32,12 @@ AddonManager.getAddonByID("sauceconnectlauncher@saucelabs.com", function(addon) 
   myAddon = addon;
 });
 
-function start() {
-  startExecutable();
-  uiShowRunning();
-  active = true;
-}
+Components.utils.import("resource://gre/modules/FileUtils.jsm");
 
-function stop() {
-  stopExecutable();
+function getTemporaryFile(suggestedName) {
+  var file = FileUtils.getFile("TmpD", [suggestedName]);
+  file.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
+  return file;
 }
 
 function getExecutableFile() {
@@ -68,28 +83,69 @@ function getArguments() {
     args.push("-w");
     args.push(prefs.getCharPref("proxyuser") + ":" + prefs.getCharPref("proxypassword"));
   }
+  readyFile = getTemporaryFile("sauceconnect_ready.tmp");
+  readyFileLastModified = readyFile.lastModifiedTime;
+  args.push("-f");
+  args.push(readyFile.path);
   return args;
 }
 
-function startExecutable() {
+function shutdown() {
+  if (readyPoller != null) {
+    clearInterval(readyPoller);
+    readyPoller = null;
+  }
+  setState(OFF);
+  proc = null;
+  obs = null;
+  readyFile = null;
+}
+
+function start() {
   var args = getArguments();
   if (!args) { return; }
+  setState(STARTING);
   obs = {
-    observe: function() {
-      uiShowNotRunning();
-      proc = null;
-      obs = null;
-      active = false;
-    }
+    observe: shutdown
   };
   proc = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
   proc.init(getExecutableFile());
   proc.runAsync(args, args.length, obs);
+  readyPoller = setInterval(function() {
+    if (readyFile.exists() && readyFile.lastModifiedTime > readyFileLastModified) {
+      setState(ACTIVE);
+      clearInterval(readyPoller);
+      readyPoller = null;
+    }
+  }, 500);
 }
 
-function stopExecutable() {
+function stop() {
+  setState(STOPPING);
+  if (readyPoller != null) {
+    clearInterval(readyPoller);
+    readyPoller = null;
+  }
   if (proc != null) {
     proc.kill();
+  }
+}
+
+function setState(st) {
+  state = st;
+  switch (state) {
+    case OFF:
+      uiShowNotRunning();
+      break;
+    case STARTING:
+      uiShowStarting();
+      break;
+    case ACTIVE:
+      uiShowRunning();
+      break;
+    case STOPPING:
+      uiShowStopping();
+      break;
   }
 }
 
@@ -118,6 +174,34 @@ function uiShowNotRunning() {
   if (el) {
     el.setAttribute('tooltiptext', _('activatesauceconnect'));
     el.className = "toolbar-off";
+  }
+}
+
+function uiShowStarting() {
+  document.getElementById('sauceConnectLauncher-status-bar-icon').src = "chrome://sauceconnectlauncher/skin/status-bar-connecting.gif";
+  document.getElementById('sauceConnectLauncher-status-bar-icon').setAttribute('tooltiptext', _('sauceconnectstarting'));
+  var el = document.getElementById('sauceConnectLauncher-menuitem');
+  if (el) { el.setAttribute('label', _('sauceconnectstarting')); }
+  el = document.getElementById('sauceConnectLauncher-appmenuitem');
+  if (el) { el.setAttribute('label', _('sauceconnectstarting')); }
+  el = document.getElementById('sauceConnectLauncher-toolbar-button');
+  if (el) {
+    el.setAttribute('tooltiptext', _('sauceconnectstarting'));
+    el.className = "toolbar-on";
+  }
+}
+
+function uiShowStopping() {
+  document.getElementById('sauceConnectLauncher-status-bar-icon').src = "chrome://sauceconnectlauncher/skin/status-bar-connecting.gif";
+  document.getElementById('sauceConnectLauncher-status-bar-icon').setAttribute('tooltiptext', _('sauceconnectstopping'));
+  var el = document.getElementById('sauceConnectLauncher-menuitem');
+  if (el) { el.setAttribute('label', _('sauceconnectstopping')); }
+  el = document.getElementById('sauceConnectLauncher-appmenuitem');
+  if (el) { el.setAttribute('label', _('sauceconnectstopping')); }
+  el = document.getElementById('sauceConnectLauncher-toolbar-button');
+  if (el) {
+    el.setAttribute('tooltiptext', _('sauceconnectstopping'));
+    el.className = "toolbar-on";
   }
 }
 
