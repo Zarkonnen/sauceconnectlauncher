@@ -1,5 +1,9 @@
 <!ENTITY activatesauceconnect "Sauce Connect is inactive. Click to activate.">
 
+<!ENTITY showsauceconnectlog "Sauce Connect Log">
+<!ENTITY log "Log">
+<!ENTITY options "Options">
+
 <!ENTITY sauceaccount "Sauce Account">
 <!ENTITY accountname "Account Name">
 <!ENTITY accountname_tt "Your Sauce Labs account name. Required field.">

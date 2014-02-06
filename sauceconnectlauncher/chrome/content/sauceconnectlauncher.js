@@ -13,6 +13,12 @@ var readyFile = null;
 var readyFileLastModified = 0;
 var readyPoller = null;
 
+sauceConnectLauncher.logFile = null;
+
+sauceConnectLauncher.onClick = function(event) {
+  if (event.which == 1) { sauceConnectLauncher.run(); }
+};
+
 sauceConnectLauncher.run = function() {
   switch (state) {
     case OFF:
@@ -23,6 +29,14 @@ sauceConnectLauncher.run = function() {
       stop();
       break;
   }
+};
+
+sauceConnectLauncher.showLog = function() {
+  window.openDialog("chrome://sauceconnectlauncher/content/log.xul", "logdlg", "", sauceConnectLauncher);
+};
+
+sauceConnectLauncher.showOptions = function() {
+  window.openDialog("chrome://sauceconnectlauncher/content/options.xul");
 };
 
 var myAddon = null;
@@ -87,6 +101,10 @@ function getArguments() {
   readyFileLastModified = readyFile.lastModifiedTime;
   args.push("-f");
   args.push(readyFile.path);
+  sauceConnectLauncher.logFile = getTemporaryFile("sauceconnect_log.tmp.txt");
+  args.push("-l");
+  args.push(sauceConnectLauncher.logFile.path);
+  //args.push("-v");
   return args;
 }
 
@@ -99,6 +117,7 @@ function shutdown() {
   proc = null;
   obs = null;
   readyFile = null;
+  sauceConnectLauncher.logFile = null;
 }
 
 function start() {
