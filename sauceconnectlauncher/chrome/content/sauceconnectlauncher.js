@@ -54,15 +54,12 @@ function getTemporaryFile(suggestedName) {
   return file;
 }
 
-function isMac() { // qqDPS tmp
-  for (var k in window.navigator) {
-    alert(k + ": " + window.navigator[k]);
-  }
-  return false;
+function isMac() {
+  return window.navigator.oscpu.indexOf("Mac OS X") != -1;
 }
 
 function isWindows() {
-  return true; // qqDPS tmp
+  return window.navigator.oscpu.indexOf("Windows") != -1;
 }
 
 function getExecutableFile() {
