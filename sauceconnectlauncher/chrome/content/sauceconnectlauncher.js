@@ -150,6 +150,11 @@ function stop() {
   }
 }
 
+// Stop the tunnel when Firefox shuts down.
+var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+observerService.addObserver({observe: stop}, "quit-application-requested", false);
+// NB quit-application-granted or quit-application would be better things to listen to, but in practice, they don't work!
+
 function setState(st) {
   state = st;
   switch (state) {
