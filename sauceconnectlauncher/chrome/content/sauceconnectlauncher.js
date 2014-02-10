@@ -54,8 +54,22 @@ function getTemporaryFile(suggestedName) {
   return file;
 }
 
+function isMac() { // qqDPS tmp
+  for (var k in window.navigator) {
+    alert(k + ": " + window.navigator[k]);
+  }
+  return false;
+}
+
+function isWindows() {
+  return true; // qqDPS tmp
+}
+
 function getExecutableFile() {
-  return myAddon.getResourceURI("/chrome/content/sc").QueryInterface(Components.interfaces.nsIFileURL).file;
+  var path = "/chrome/content/linux/sc";
+  if (isMac()) { path = "/chrome/content/mac/sc"; }
+  if (isWindows()) { path = "/chrome/content/win/sc.exe"; }
+  return myAddon.getResourceURI(path).QueryInterface(Components.interfaces.nsIFileURL).file;
 }
 
 var prefs = Components.classes["@mozilla.org/preferences-service;1"]
