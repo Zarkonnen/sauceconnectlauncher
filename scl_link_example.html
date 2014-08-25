@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sauce Connect Launcher Link Example Code</title>
+        <script src="scl_link.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    </head>
+    <body>
+        <div>
+            State: <div id="state_value">Not Connected</div>
+        </div>
+        <div>
+            <span style="text-decoration: underline; cursor: pointer;" id="launch_link" style="display: hidden;">Start</span>
+        </div>
+        <div>
+            Settings:<br>
+            <textarea id="settings_value" rows="20" cols="120"></textarea><br>
+            <span style="text-decoration: underline; cursor: pointer;" id="set_settings_link" style="display: hidden;">Set Settings</span><br>
+            <span style="text-decoration: underline; cursor: pointer;" id="refresh_link" style="display: hidden;">Refresh</span><br>
+        </div>
+        <script>
+            function stateName(s) {
+                return ["Off", "Starting", "Active", "Stopping"][s];
+            }
+            jQuery(document).ready(function($) {
+                $("#launch_link").click(function() {
+                    $("#launch_link").hide();
+                    $("#state_value").html("Launching...");
+                    launchSCL();
+                });
+                 $("#refresh_link").click(function() {
+                    $("#state_value").html(stateName(getSCLState()));
+                    $("#settings_value").val(JSON.stringify(JSON.parse(getSCLSettings()), null, 4));
+                });
+                $("#set_settings_link").click(function() {
+                    var data = null;
+                    try {
+                        data = JSON.parse($("#settings_value").val());
+                    } catch (e) {
+                        alert("Settings are not valid JSON: " + e);
+                        return;
+                    }
+                    setSCLSettings(JSON.stringify(data));
+                });
+                initSCLLink();
+                $("#state_value").html("Connecting...");
+                var cint = setInterval(function() {
+                    if (getSCLSettings()) {
+                        $("#state_value").html(stateName(getSCLState()));
+                        $("#settings_value").html(JSON.stringify(JSON.parse(getSCLSettings()), null, 4));
+                        $("#launch_link").show();
+                        $("#refresh_link").show();
+                        $("#set_settings_link").show();
+                        clearInterval(cint);
+                        cint = setInterval(function() {
+                            $("#state_value").html(stateName(getSCLState()));
+                        }, 100);
+                    }
+                }, 100);
+            });
+        </script>
+    </body>
+</html>

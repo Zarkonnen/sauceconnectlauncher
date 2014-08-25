@@ -167,6 +167,7 @@ observerService.addObserver({observe: stop}, "quit-application-requested", false
 // NB quit-application-granted or quit-application would be better things to listen to, but in practice, they don't work!
 
 function setState(st) {
+  sauceConnectLauncher.putIntoLink("state", st);
   state = st;
   switch (state) {
     case OFF:
@@ -243,3 +244,88 @@ function uiShowStopping() {
 function _(name) {
   return document.getElementById('strings').getString(name);
 }
+
+
+/** Integration */
+sauceConnectLauncher.getIntegrationURLPattern = function() {
+  return /^file/; // qqDPS for testing purposes
+}
+
+sauceConnectLauncher.linkElement = null;
+sauceConnectLauncher.linkInterval = null;
+
+sauceConnectLauncher.checkLink = function() {
+  if (!sauceConnectLauncher.linkElement) { return; }
+  if (state == OFF && sauceConnectLauncher.popFromLink("launch") == "true") {
+    sauceConnectLauncher.run();
+  }
+  var newSettings = sauceConnectLauncher.popFromLink("settings");
+  if (newSettings) {
+    sauceConnectLauncher.setSettingsJSON(newSettings);
+  }
+  sauceConnectLauncher.putIntoLink("state", state);
+  sauceConnectLauncher.putIntoLink("settings", sauceConnectLauncher.getSettingsJSON());
+};
+
+sauceConnectLauncher.putIntoLink = function(key, value) {
+  if (!sauceConnectLauncher.linkElement) { return; }
+  sauceConnectLauncher.linkElement.setAttribute("get" + key, value);
+};
+
+sauceConnectLauncher.popFromLink = function(key) {
+  if (!sauceConnectLauncher.linkElement) { return null; }
+  if (sauceConnectLauncher.linkElement.hasAttribute("set" + key)) {
+    var val = sauceConnectLauncher.linkElement.getAttribute("set" + key);
+    sauceConnectLauncher.linkElement.removeAttribute("set" + key);
+    return val;
+  }
+  return null;
+};
+
+sauceConnectLauncher.getSettingsJSON = function() {
+  return JSON.stringify({
+    "accountname": prefs.getCharPref("accountname"),
+    "accesskey": prefs.getCharPref("accesskey"),
+    "tunnelidentifier": prefs.getCharPref("tunnelidentifier"),
+    "resturl": prefs.getCharPref("resturl"),
+    "nosslbumpdomains": prefs.getCharPref("nosslbumpdomains"),
+    "directdomains": prefs.getCharPref("directdomains"),
+    "fastfailregexps": prefs.getCharPref("fastfailregexps"),
+    "proxyuser": prefs.getCharPref("proxyuser"),
+    "proxypassword": prefs.getCharPref("proxypassword"),
+    "proxyhost": prefs.getCharPref("proxyhost"),
+    "proxyport": prefs.getIntPref("proxyport"),
+    "sharedtunnel": prefs.getBoolPref("sharedtunnel")
+  });
+}
+
+sauceConnectLauncher.setSettingsJSON = function(settingsJSON) {
+  var sets = JSON.parse(settingsJSON);
+  ["accountname", "accesskey", "tunnelidentifier", "resturl", "nosslbumpdomains", "directdomains", "fastfailregexps", "proxyuser", "proxypassword", "proxyhost"].forEach(function(k) {
+    if (sets[k]) {
+      prefs.setCharPref(k, sets[k]);
+    }
+  });
+  if (sets["proxyport"]) { prefs.setIntPref("proxyport", sets["proxyport"]); }
+  if (sets["sharedtunnel"]) { prefs.setBoolPref("sharedtunnel", sets["sharedtunnel"]); }
+}
+
+sauceConnectLauncher.onPageLoad = function(e) {
+  var doc = e.originalTarget;
+  var url = doc.location.href;
+  if (url.match(sauceConnectLauncher.getIntegrationURLPattern())) {
+    clearInterval(sauceConnectLauncher.linkInterval);
+    sauceConnectLauncher.linkInterval = setInterval(function() {
+      var el = doc.getElementById("__scl_link");
+      if (el) {
+        sauceConnectLauncher.linkElement = el;
+        sauceConnectLauncher.putIntoLink("state", state);
+        sauceConnectLauncher.putIntoLink("settings", sauceConnectLauncher.getSettingsJSON());
+        clearInterval(sauceConnectLauncher.linkInterval);
+        sauceConnectLauncher.linkInterval = setInterval(sauceConnectLauncher.checkLink, 100);
+      }
+    }, 100);
+  }
+}
+
+gBrowser.addEventListener("DOMContentLoaded", sauceConnectLauncher.onPageLoad, false);
