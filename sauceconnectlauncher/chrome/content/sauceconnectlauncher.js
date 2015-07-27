@@ -233,8 +233,13 @@ function uiShowStopping() {
   }
 }
 
-function _(name) {
-  return document.getElementById('strings').getString(name);
+function _(key) {
+  try {
+    return document.getElementById('strings').getString(key);
+  } catch (e) {
+    // If we're closing this may not work, so we just return the key.
+    return key;
+  }
 }
 
 
@@ -309,7 +314,10 @@ sauceConnectLauncher.onPageLoad = function(e) {
   if (url.match(sauceConnectLauncher.getIntegrationURLPattern())) {
     clearInterval(sauceConnectLauncher.linkInterval);
     sauceConnectLauncher.linkInterval = setInterval(function() {
-      var el = doc.getElementById("__scl_link");
+      var el = null;
+      try {
+        el = doc.getElementById("__scl_link");
+      } catch (e) { /* doc may be stale, in which case never mind */ }
       if (el) {
         sauceConnectLauncher.linkElement = el;
         sauceConnectLauncher.putIntoLink("state", state);
