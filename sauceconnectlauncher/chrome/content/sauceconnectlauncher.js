@@ -148,6 +148,9 @@ function start() {
       readyPoller = null;
     }
   }, 500);
+  if (prefs.getBoolPref("showlog")) {
+    sauceConnectLauncher.showLog();
+  }
 }
 
 function stop() {

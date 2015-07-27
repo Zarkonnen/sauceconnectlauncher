@@ -17,11 +17,19 @@
     </menupopup>
 
     <menupopup id="appmenu_webDeveloper_popup">
-        <menuitem label="&showsauceconnectlog;" id="sauceConnectLauncher-appmenulogitem" key="sauceConnectLauncher-log-key" oncommand="sauceConnectLauncher.showLog()"/>
+        <menuitem label="&showsauceconnectlog;" id="sauceConnectLauncher-appmenulogitem" oncommand="sauceConnectLauncher.showLog()"/>
     </menupopup>
 
     <menupopup id="menuWebDeveloperPopup">
-        <menuitem label="&showsauceconnectlog;" id="sauceConnectLauncher-menulogitem" key="sauceConnectLauncher-log-key" oncommand="sauceConnectLauncher.showLog()"/>
+        <menuitem label="&showsauceconnectlog;" id="sauceConnectLauncher-menulogitem" oncommand="sauceConnectLauncher.showLog()"/>
+    </menupopup>
+
+    <menupopup id="appmenu_webDeveloper_popup">
+        <menuitem label="&showsauceconnectoptions;" id="sauceConnectLauncher-appmenuoptionsitem" oncommand="sauceConnectLauncher.showOptions()"/>
+    </menupopup>
+
+    <menupopup id="menuWebDeveloperPopup">
+        <menuitem label="&showsauceconnectoptions;" id="sauceConnectLauncher-menuoptionsitem" oncommand="sauceConnectLauncher.showOptions()"/>
     </menupopup>
 
     <popupset>
@@ -32,8 +40,7 @@
     </popupset>
 
     <keyset>
-        <key id="sauceConnectLauncher-run-key" modifiers="accel alt" key="S" oncommand="sauceConnectLauncher.run()"/>
-        <key id="sauceConnectLauncher-log-key" modifiers="accel alt" key="O" oncommand="sauceConnectLauncher.showLog()"/>
+        <key id="sauceConnectLauncher-run-key" modifiers="accel alt shift" key="C" oncommand="sauceConnectLauncher.run()"/>
     </keyset>
 
     <toolbarpalette id="BrowserToolbarPalette">

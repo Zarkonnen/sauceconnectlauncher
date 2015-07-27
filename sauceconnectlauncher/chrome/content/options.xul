@@ -4,6 +4,8 @@
 <prefwindow xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="Sauce Connect Preferences">
   <prefpane label="Sauce Connect Preferences">
     <preferences>
+      <preference id="sauceconnectlauncher-showlog" name="extensions.sauceconnectlauncher.showlog" type="bool"/>
+      
       <preference id="sauceconnectlauncher-accountname" name="extensions.sauceconnectlauncher.accountname" type="string"/>
       <preference id="sauceconnectlauncher-accesskey" name="extensions.sauceconnectlauncher.accesskey" type="string"/>
       
@@ -43,6 +45,10 @@
               <row>
                 <label control="accesskey" value="&accesskey;*" tooltiptext="&accesskey_tt;" style="font-weight: bold; text-align: right; margin-top: 0.4em;"/>
                 <textbox id="accesskey" preference="sauceconnectlauncher-accesskey"/>
+              </row>
+              <row>
+                <label control="showlog" value="&showlog;" tooltiptext="&showlog_tt;" style="text-align: right; margin-top: 0.4em;"/>
+                <checkbox id="showlog" preference="sauceconnectlauncher-showlog"/>               
               </row>
             </rows>
           </grid>
@@ -125,4 +131,3 @@
     </tabbox>
   </prefpane>
 </prefwindow>
-

@@ -1,3 +1,5 @@
+pref("extensions.sauceconnectlauncher.showlog", false);
+
 pref("extensions.sauceconnectlauncher.accountname", "");
 pref("extensions.sauceconnectlauncher.accesskey", "");
 
