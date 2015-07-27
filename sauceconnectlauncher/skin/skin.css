@@ -6,6 +6,6 @@
 	list-style-image: URL("chrome://sauceconnectlauncher/skin/status-bar.png");
 }
 
-#sauceConnectLauncher-status-bar-icon {
-  margin-top: 1px;
+.toolbar-starting {
+	list-style-image: URL("chrome://sauceconnectlauncher/skin/status-bar-connecting.gif");
 }

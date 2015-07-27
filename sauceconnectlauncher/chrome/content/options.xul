@@ -20,7 +20,6 @@
       <preference id="sauceconnectlauncher-proxyport" name="extensions.sauceconnectlauncher.proxyport" type="int"/>
       <preference id="sauceconnectlauncher-proxyuser" name="extensions.sauceconnectlauncher.proxyuser" type="string"/>
       <preference id="sauceconnectlauncher-proxypassword" name="extensions.sauceconnectlauncher.proxypassword" type="string"/>
-
     </preferences>
     <tabbox>
       <tabs>

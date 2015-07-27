@@ -2,45 +2,41 @@
 <?xml-stylesheet href="chrome://sauceconnectlauncher/skin/skin.css" type="text/css"?>
 <!DOCTYPE sauceconnectlauncher SYSTEM "chrome://sauceconnectlauncher/locale/translations.dtd">
 <overlay id="sample" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="strings" src="chrome://sauceconnectlauncher/locale/strings.properties" />
-  </stringbundleset>
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="strings" src="chrome://sauceconnectlauncher/locale/strings.properties" />
+    </stringbundleset>
 
-	<script src="sauceconnectlauncher.js" />
+    <script src="sauceconnectlauncher.js" />
 
-	<menupopup id="appmenu_webDeveloper_popup">
-		<menuitem label="&activatesauceconnect;" id="sauceConnectLauncher-appmenuitem" key="sauceConnectLauncher-run-key" oncommand="sauceConnectLauncher.run()"/>
-	</menupopup>
-	
-	<menupopup id="menuWebDeveloperPopup">
-		<menuitem label="&activatesauceconnect;" id="sauceConnectLauncher-menuitem" key="sauceConnectLauncher-run-key" oncommand="sauceConnectLauncher.run()"/>
-	</menupopup>
-	
-	<menupopup id="appmenu_webDeveloper_popup">
-		<menuitem label="&showsauceconnectlog;" id="sauceConnectLauncher-appmenulogitem" key="sauceConnectLauncher-log-key" oncommand="sauceConnectLauncher.showLog()"/>
-	</menupopup>
-	
-	<menupopup id="menuWebDeveloperPopup">
-		<menuitem label="&showsauceconnectlog;" id="sauceConnectLauncher-menulogitem" key="sauceConnectLauncher-log-key" oncommand="sauceConnectLauncher.showLog()"/>
-	</menupopup>
-	
-	<popupset>
-	  <menupopup id="sauceconnectPopup">
-	    <menuitem label="&options;" oncommand="sauceConnectLauncher.showOptions();"/>
-	    <menuitem label="&log;" oncommand="sauceConnectLauncher.showLog();"/>
-	  </menupopup>
-	</popupset>
+    <menupopup id="appmenu_webDeveloper_popup">
+        <menuitem label="&activatesauceconnect;" id="sauceConnectLauncher-appmenuitem" key="sauceConnectLauncher-run-key" oncommand="sauceConnectLauncher.run()"/>
+    </menupopup>
 
-	<keyset>
-		<key id="sauceConnectLauncher-run-key" modifiers="accel alt shift" key="C" oncommand="sauceConnectLauncher.run()"/>
-		<key id="sauceConnectLauncher-log-key" modifiers="accel alt shift" key="L" oncommand="sauceConnectLauncher.showLog()"/>
-	</keyset>
+    <menupopup id="menuWebDeveloperPopup">
+        <menuitem label="&activatesauceconnect;" id="sauceConnectLauncher-menuitem" key="sauceConnectLauncher-run-key" oncommand="sauceConnectLauncher.run()"/>
+    </menupopup>
 
-	<statusbar id="status-bar">
-		<statusbarpanel id="sauceConnectLauncher-status-bar-icon" class="statusbarpanel-iconic" src="chrome://sauceconnectlauncher/skin/status-bar-off.png" tooltiptext="&activatesauceconnect;" onclick="sauceConnectLauncher.onClick(event)" context="sauceconnectPopup"/>
-	</statusbar>
+    <menupopup id="appmenu_webDeveloper_popup">
+        <menuitem label="&showsauceconnectlog;" id="sauceConnectLauncher-appmenulogitem" key="sauceConnectLauncher-log-key" oncommand="sauceConnectLauncher.showLog()"/>
+    </menupopup>
 
-	<toolbarpalette id="BrowserToolbarPalette">
-		<toolbarbutton id="sauceConnectLauncher-toolbar-button" class="toolbar-off" label="Sauce Connect" tooltiptext="&activatesauceconnect;" oncommand="sauceConnectLauncher.onClick(event)" context="sauceconnectPopup"/>
-	</toolbarpalette>
+    <menupopup id="menuWebDeveloperPopup">
+        <menuitem label="&showsauceconnectlog;" id="sauceConnectLauncher-menulogitem" key="sauceConnectLauncher-log-key" oncommand="sauceConnectLauncher.showLog()"/>
+    </menupopup>
+
+    <popupset>
+        <menupopup id="sauceconnectPopup">
+            <menuitem label="&options;" oncommand="sauceConnectLauncher.showOptions();"/>
+            <menuitem label="&log;" oncommand="sauceConnectLauncher.showLog();"/>
+        </menupopup>
+    </popupset>
+
+    <keyset>
+        <key id="sauceConnectLauncher-run-key" modifiers="accel alt" key="S" oncommand="sauceConnectLauncher.run()"/>
+        <key id="sauceConnectLauncher-log-key" modifiers="accel alt" key="O" oncommand="sauceConnectLauncher.showLog()"/>
+    </keyset>
+
+    <toolbarpalette id="BrowserToolbarPalette">
+        <toolbarbutton id="sauceConnectLauncher-toolbar-button" class="toolbar-off" label="Sauce Connect" tooltiptext="&activatesauceconnect;" oncommand="sauceConnectLauncher.onClick(event);" context="sauceconnectPopup"/>
+    </toolbarpalette>
 </overlay>

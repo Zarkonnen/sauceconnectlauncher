@@ -16,7 +16,7 @@ var readyPoller = null;
 sauceConnectLauncher.logFile = null;
 
 sauceConnectLauncher.onClick = function(event) {
-  if (event.which == 1) { sauceConnectLauncher.run(); }
+  sauceConnectLauncher.run();
 };
 
 sauceConnectLauncher.run = function() {
@@ -186,8 +186,6 @@ function setState(st) {
 }
 
 function uiShowRunning() {
-  document.getElementById('sauceConnectLauncher-status-bar-icon').src = "chrome://sauceconnectlauncher/skin/status-bar.png";
-  document.getElementById('sauceConnectLauncher-status-bar-icon').setAttribute('tooltiptext', _('deactivatesauceconnect'));
   var el = document.getElementById('sauceConnectLauncher-menuitem');
   if (el) { el.setAttribute('label', _('deactivatesauceconnect')); }
   el = document.getElementById('sauceConnectLauncher-appmenuitem');
@@ -200,8 +198,6 @@ function uiShowRunning() {
 }
 
 function uiShowNotRunning() {
-  document.getElementById('sauceConnectLauncher-status-bar-icon').src = "chrome://sauceconnectlauncher/skin/status-bar-off.png";
-  document.getElementById('sauceConnectLauncher-status-bar-icon').setAttribute('tooltiptext', _('activatesauceconnect'));
   var el = document.getElementById('sauceConnectLauncher-menuitem');
   if (el) { el.setAttribute('label', _('activatesauceconnect')); }
   el = document.getElementById('sauceConnectLauncher-appmenuitem');
@@ -214,8 +210,6 @@ function uiShowNotRunning() {
 }
 
 function uiShowStarting() {
-  document.getElementById('sauceConnectLauncher-status-bar-icon').src = "chrome://sauceconnectlauncher/skin/status-bar-connecting.gif";
-  document.getElementById('sauceConnectLauncher-status-bar-icon').setAttribute('tooltiptext', _('sauceconnectstarting'));
   var el = document.getElementById('sauceConnectLauncher-menuitem');
   if (el) { el.setAttribute('label', _('sauceconnectstarting')); }
   el = document.getElementById('sauceConnectLauncher-appmenuitem');
@@ -223,13 +217,11 @@ function uiShowStarting() {
   el = document.getElementById('sauceConnectLauncher-toolbar-button');
   if (el) {
     el.setAttribute('tooltiptext', _('sauceconnectstarting'));
-    el.className = "toolbar-on";
+    el.className = "toolbar-starting";
   }
 }
 
 function uiShowStopping() {
-  document.getElementById('sauceConnectLauncher-status-bar-icon').src = "chrome://sauceconnectlauncher/skin/status-bar-connecting.gif";
-  document.getElementById('sauceConnectLauncher-status-bar-icon').setAttribute('tooltiptext', _('sauceconnectstopping'));
   var el = document.getElementById('sauceConnectLauncher-menuitem');
   if (el) { el.setAttribute('label', _('sauceconnectstopping')); }
   el = document.getElementById('sauceConnectLauncher-appmenuitem');
@@ -247,8 +239,9 @@ function _(name) {
 
 
 /** Integration */
+// Regex for checking if a given page is allowed to talk to integration. Only file:// and sauce labs URLs are.
 sauceConnectLauncher.getIntegrationURLPattern = function() {
-  return /^file/; // qqDPS for testing purposes
+  return /^(file:\/\/)|(https?:\/\/(www\.)?saucelabs\.com)/;
 }
 
 sauceConnectLauncher.linkElement = null;
