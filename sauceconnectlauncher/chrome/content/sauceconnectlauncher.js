@@ -13,7 +13,30 @@ var readyFile = null;
 var readyFileLastModified = 0;
 var readyPoller = null;
 
+var tunnelIDFinder = null;
+var tunnelID = 0;
+
 sauceConnectLauncher.logFile = null;
+
+function readFile(file) { 
+  var data = "";
+  var fstream = Components.classes["@mozilla.org/network/file-input-stream;1"].
+                createInstance(Components.interfaces.nsIFileInputStream);
+  var cstream = Components.classes["@mozilla.org/intl/converter-input-stream;1"].
+                createInstance(Components.interfaces.nsIConverterInputStream);
+  fstream.init(file, -1, 0, 0);
+  cstream.init(fstream, "UTF-8", 0, 0); // you can use another encoding here if you wish
+
+  let (str = {}) {
+    let read = 0;
+    do { 
+      read = cstream.readString(0xffffffff, str); // read as much as we can and put it in str.value
+      data += str.value;
+    } while (read != 0);
+  }
+  cstream.close(); // this closes fstream
+  return data;
+}
 
 sauceConnectLauncher.onClick = function(event) {
   sauceConnectLauncher.run();
@@ -134,6 +157,7 @@ function shutdown() {
 function start() {
   var args = getArguments();
   if (!args) { return; }
+  tunnelID = 0;
   setState(STARTING);
   obs = {
     observe: shutdown
@@ -148,6 +172,17 @@ function start() {
       readyPoller = null;
     }
   }, 500);
+  tunnelIDFinder = setInterval(function() {
+    if (sauceConnectLauncher.logFile.exists()) {
+      var sclog = readFile(sauceConnectLauncher.logFile);
+      var m = sclog.match("Tunnel ID: ([a-z0-9]+)");
+      if (m) {
+        tunnelID = m[1];
+        clearInterval(tunnelIDFinder);
+        tunnelIDFinder = null;
+      }
+    }
+  }, 100);
   if (prefs.getBoolPref("showlog")) {
     sauceConnectLauncher.showLog();
   }
@@ -159,8 +194,21 @@ function stop() {
     clearInterval(readyPoller);
     readyPoller = null;
   }
+  if (tunnelIDFinder != null) {
+    clearInterval(tunnelIDFinder);
+    tunnelIDFinder = null;
+  }
   if (proc != null) {
     proc.kill();
+  }
+  
+  if (tunnelID) {
+    var accountName = prefs.getCharPref("accountname");
+    var key = prefs.getCharPref("accesskey");
+    var r = new XMLHttpRequest();
+    r.open("DELETE", "https://saucelabs.com/rest/v1/" + accountName + "/tunnels/" + tunnelID, true);
+    r.setRequestHeader("Authorization", "Basic " + btoa(accountName + ":" + key));
+    r.send();
   }
 }
 
