@@ -105,7 +105,7 @@ function getArguments() {
     prefs.setCharPref("accesskey", accesskey);
   }
   
-  var args = [ "-u", prefs.getCharPref("accountname"), "-k", prefs.getCharPref("accesskey") ];
+  var args = [ "-u", prefs.getCharPref("accountname").trim(), "-k", prefs.getCharPref("accesskey").trim() ];
   var string_prefs_mapping = [
     [ "tunnelidentifier", "-i" ],
     [ "resturl", "-x" ],
@@ -116,7 +116,7 @@ function getArguments() {
   string_prefs_mapping.forEach(function (m) {
     if (prefs.getCharPref(m[0]) != "") {
       args.push(m[1]);
-      args.push(prefs.getCharPref(m[0]));
+      args.push(prefs.getCharPref(m[0]).trim());
     }
   });
   if (prefs.getBoolPref("sharedtunnel")) {
@@ -128,7 +128,7 @@ function getArguments() {
   }
   if (prefs.getCharPref("proxyuser") != "" && prefs.getCharPref("proxypassword") != "") {
     args.push("-w");
-    args.push(prefs.getCharPref("proxyuser") + ":" + prefs.getCharPref("proxypassword"));
+    args.push(prefs.getCharPref("proxyuser").trim() + ":" + prefs.getCharPref("proxypassword").trim());
   }
   readyFile = getTemporaryFile("sauceconnect_ready.tmp");
   readyFileLastModified = readyFile.lastModifiedTime;
