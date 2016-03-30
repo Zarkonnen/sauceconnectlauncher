@@ -17,6 +17,7 @@ var tunnelIDFinder = null;
 var tunnelID = 0;
 
 sauceConnectLauncher.logFile = null;
+sauceConnectLauncher.launchLog = "";
 
 function readFile(file) { 
   var data = "";
@@ -95,7 +96,22 @@ var prefs = Components.classes["@mozilla.org/preferences-service;1"]
                     .getService(Components.interfaces.nsIPrefService);
 prefs = prefs.getBranch("extensions.sauceconnectlauncher.");
 
+function checkCredentials(aname, akey) {
+  sauceConnectLauncher.launchLog += "Checking credentials \"" + aname + "\":\"" + akey + "\".\n";
+  var r = new XMLHttpRequest();
+  r.open("GET", "https://saucelabs.com/rest/v1/users/" + aname, true);
+  r.setRequestHeader("Authorization", "Basic " + btoa(aname + ":" + akey));
+  r.addEventListener("load", function(e) {
+    sauceConnectLauncher.launchLog += "Credentials check result:" + r.responseText + "\n";
+  });
+  r.addEventListener("error", function(e) {
+    sauceConnectLauncher.launchLog += "Error checking credentials:" + r.statusText + "\n";
+  });
+  r.send();
+}
+
 function getArguments() {
+  sauceConnectLauncher.launchLog = "";
   if (prefs.getCharPref("accountname") == "" || prefs.getCharPref("accesskey") == "") {
     var accountname = prompt(_("account_q"));
     if (!accountname) { return null; }
@@ -105,7 +121,15 @@ function getArguments() {
     prefs.setCharPref("accesskey", accesskey);
   }
   
-  var args = [ "-u", prefs.getCharPref("accountname").trim(), "-k", prefs.getCharPref("accesskey").trim() ];
+  var akey = prefs.getCharPref("accesskey").trim();
+  var aname = prefs.getCharPref("accountname").trim();
+  if (akey.match(/^[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}$/)) {
+    sauceConnectLauncher.launchLog += "Access key \"" + akey + "\" appears valid.\n";
+  } else {
+    sauceConnectLauncher.launchLog += "Access key \"" + akey + "\" appears invalid.\n";
+  }
+  checkCredentials(aname, akey);
+  var args = [ "-u", aname, "-k", akey ];
   var string_prefs_mapping = [
     [ "tunnelidentifier", "-i" ],
     [ "resturl", "-x" ],
@@ -138,6 +162,10 @@ function getArguments() {
   args.push("-l");
   args.push(sauceConnectLauncher.logFile.path);
   //args.push("-v");
+  sauceConnectLauncher.launchLog += "Args:\n";
+  args.forEach(function(a) {
+    sauceConnectLauncher.launchLog += "\"" + a + "\"\n";
+  });
   return args;
 }
 

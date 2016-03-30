@@ -21,7 +21,7 @@ function readFile(file) {
 
 function refreshLog() {
   if (!sauceConnectLauncher.logFile || !sauceConnectLauncher.logFile.exists()) { return; }
-  document.getElementById('logbox').value = readFile(sauceConnectLauncher.logFile);
+  document.getElementById('logbox').value = sauceConnectLauncher.launchLog + readFile(sauceConnectLauncher.logFile);
 }
 
 window.setTimeout(refreshLog, 10);
