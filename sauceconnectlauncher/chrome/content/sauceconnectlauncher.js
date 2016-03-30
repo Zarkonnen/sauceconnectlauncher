@@ -96,21 +96,30 @@ var prefs = Components.classes["@mozilla.org/preferences-service;1"]
                     .getService(Components.interfaces.nsIPrefService);
 prefs = prefs.getBranch("extensions.sauceconnectlauncher.");
 
-function checkCredentials(aname, akey) {
-  sauceConnectLauncher.launchLog += "Checking credentials \"" + aname + "\":\"" + akey + "\".\n";
+function checkCredentials(aname, akey, success, failure) {
+  sauceConnectLauncher.launchLog += "Checking credentials for \"" + aname + "\".\n";
   var r = new XMLHttpRequest();
   r.open("GET", "https://saucelabs.com/rest/v1/users/" + aname, true);
   r.setRequestHeader("Authorization", "Basic " + btoa(aname + ":" + akey));
   r.addEventListener("load", function(e) {
-    sauceConnectLauncher.launchLog += "Credentials check result:" + r.responseText + "\n";
+    try {
+      var info = JSON.parse(r.responseText);
+      if (info.error) {
+        failure(info.error);
+      } else {
+        success(r.responseText);
+      }
+    } catch (e) {
+      failure(r.responseText);
+    }
   });
   r.addEventListener("error", function(e) {
-    sauceConnectLauncher.launchLog += "Error checking credentials:" + r.statusText + "\n";
+    failure(r.statusText);
   });
   r.send();
 }
 
-function getArguments() {
+function getArguments(callback) {
   sauceConnectLauncher.launchLog = "";
   if (prefs.getCharPref("accountname") == "" || prefs.getCharPref("accesskey") == "") {
     var accountname = prompt(_("account_q"));
@@ -124,49 +133,63 @@ function getArguments() {
   var akey = prefs.getCharPref("accesskey").trim();
   var aname = prefs.getCharPref("accountname").trim();
   if (akey.match(/^[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}$/)) {
-    sauceConnectLauncher.launchLog += "Access key \"" + akey + "\" appears valid.\n";
+    sauceConnectLauncher.launchLog += "Access key appears valid.\n";
   } else {
-    sauceConnectLauncher.launchLog += "Access key \"" + akey + "\" appears invalid.\n";
+    sauceConnectLauncher.launchLog += "Access key appears invalid.\n";
+    alert("Your Sauce access key doesn't look right. Please check you entered it correctly.");
+    return;
   }
-  checkCredentials(aname, akey);
-  var args = [ "-u", aname, "-k", akey ];
-  var string_prefs_mapping = [
-    [ "tunnelidentifier", "-i" ],
-    [ "resturl", "-x" ],
-    [ "nosslbumpdomains", "-B" ],
-    [ "directdomains", "-D" ],
-    [ "fastfailregexps", "-F" ]
-  ];
-  string_prefs_mapping.forEach(function (m) {
-    if (prefs.getCharPref(m[0]) != "") {
-      args.push(m[1]);
-      args.push(prefs.getCharPref(m[0]).trim());
+  checkCredentials(aname, akey,
+  // Success
+  function(responseText) {
+    sauceConnectLauncher.launchLog += "Credentials check successful.\n";
+    var args = [ "-u", aname, "-k", akey ];
+    var string_prefs_mapping = [
+      [ "tunnelidentifier", "-i" ],
+      [ "resturl", "-x" ],
+      [ "nosslbumpdomains", "-B" ],
+      [ "directdomains", "-D" ],
+      [ "fastfailregexps", "-F" ]
+    ];
+    string_prefs_mapping.forEach(function (m) {
+      if (prefs.getCharPref(m[0]) != "") {
+        args.push(m[1]);
+        args.push(prefs.getCharPref(m[0]).trim());
+      }
+    });
+    if (prefs.getBoolPref("sharedtunnel")) {
+      args.push("-s");
     }
+    if (prefs.getCharPref("proxyhost") != "" && prefs.getIntPref("proxyport") != 0) {
+      args.push("-p");
+      args.push(prefs.getCharPref("proxyhost") + ":" + prefs.getIntPref("proxyport"));
+    }
+    if (prefs.getCharPref("proxyuser") != "" && prefs.getCharPref("proxypassword") != "") {
+      args.push("-w");
+      args.push(prefs.getCharPref("proxyuser").trim() + ":" + prefs.getCharPref("proxypassword").trim());
+    }
+    readyFile = getTemporaryFile("sauceconnect_ready.tmp");
+    readyFileLastModified = readyFile.lastModifiedTime;
+    args.push("-f");
+    args.push(readyFile.path);
+    sauceConnectLauncher.logFile = getTemporaryFile("sauceconnect_log.tmp.txt");
+    args.push("-l");
+    args.push(sauceConnectLauncher.logFile.path);
+    //args.push("-v");
+    sauceConnectLauncher.launchLog += "Args:\n";
+    args.forEach(function(a) {
+      if (a == akey) {
+        a = "****";
+      }
+      sauceConnectLauncher.launchLog += "\"" + a + "\"\n";
+    });
+    callback(args);
+  },
+  // Failure
+  function (statusText) {
+    sauceConnectLauncher.launchLog += "Error checking credentials:" + statusText + "\n";
+    alert("Your Sauce account name or access key is incorrect. Please check you are using the most up-to-date credentials for your account.");
   });
-  if (prefs.getBoolPref("sharedtunnel")) {
-    args.push("-s");
-  }
-  if (prefs.getCharPref("proxyhost") != "" && prefs.getIntPref("proxyport") != 0) {
-    args.push("-p");
-    args.push(prefs.getCharPref("proxyhost") + ":" + prefs.getIntPref("proxyport"));
-  }
-  if (prefs.getCharPref("proxyuser") != "" && prefs.getCharPref("proxypassword") != "") {
-    args.push("-w");
-    args.push(prefs.getCharPref("proxyuser").trim() + ":" + prefs.getCharPref("proxypassword").trim());
-  }
-  readyFile = getTemporaryFile("sauceconnect_ready.tmp");
-  readyFileLastModified = readyFile.lastModifiedTime;
-  args.push("-f");
-  args.push(readyFile.path);
-  sauceConnectLauncher.logFile = getTemporaryFile("sauceconnect_log.tmp.txt");
-  args.push("-l");
-  args.push(sauceConnectLauncher.logFile.path);
-  //args.push("-v");
-  sauceConnectLauncher.launchLog += "Args:\n";
-  args.forEach(function(a) {
-    sauceConnectLauncher.launchLog += "\"" + a + "\"\n";
-  });
-  return args;
 }
 
 function shutdown() {
@@ -181,37 +204,38 @@ function shutdown() {
 }
 
 function start() {
-  var args = getArguments();
-  if (!args) { return; }
-  tunnelID = 0;
-  setState(STARTING);
-  obs = {
-    observe: shutdown
-  };
-  proc = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
-  proc.init(getExecutableFile());
-  proc.runAsync(args, args.length, obs);
-  readyPoller = setInterval(function() {
-    if (readyFile.exists() && readyFile.lastModifiedTime > readyFileLastModified) {
-      setState(ACTIVE);
-      clearInterval(readyPoller);
-      readyPoller = null;
-    }
-  }, 500);
-  tunnelIDFinder = setInterval(function() {
-    if (sauceConnectLauncher.logFile.exists()) {
-      var sclog = readFile(sauceConnectLauncher.logFile);
-      var m = sclog.match("Tunnel ID: ([a-z0-9]+)");
-      if (m) {
-        tunnelID = m[1];
-        clearInterval(tunnelIDFinder);
-        tunnelIDFinder = null;
+  getArguments(function(args) {
+    if (!args) { return; }
+    tunnelID = 0;
+    setState(STARTING);
+    obs = {
+      observe: shutdown
+    };
+    proc = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
+    proc.init(getExecutableFile());
+    proc.runAsync(args, args.length, obs);
+    readyPoller = setInterval(function() {
+      if (readyFile.exists() && readyFile.lastModifiedTime > readyFileLastModified) {
+        setState(ACTIVE);
+        clearInterval(readyPoller);
+        readyPoller = null;
       }
+    }, 500);
+    tunnelIDFinder = setInterval(function() {
+      if (sauceConnectLauncher.logFile.exists()) {
+        var sclog = readFile(sauceConnectLauncher.logFile);
+        var m = sclog.match("Tunnel ID: ([a-z0-9]+)");
+        if (m) {
+          tunnelID = m[1];
+          clearInterval(tunnelIDFinder);
+          tunnelIDFinder = null;
+        }
+      }
+    }, 100);
+    if (prefs.getBoolPref("showlog")) {
+      sauceConnectLauncher.showLog();
     }
-  }, 100);
-  if (prefs.getBoolPref("showlog")) {
-    sauceConnectLauncher.showLog();
-  }
+  });
 }
 
 function stop() {

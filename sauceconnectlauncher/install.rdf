@@ -3,9 +3,9 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>sauceconnectlauncher@saucelabs.com</em:id>
     <em:name>Sauce Connect</em:name>
-    <em:version>0.3.3</em:version>
+    <em:version>0.3.4</em:version>
     <em:type>2</em:type>
-    <em:iconURL>chrome://sauceconnectlauncher/skin/toolbar-large.png</em:iconURL>
+    <em:iconURL>chrome://sauceconnectlauncher/skin/64x64.png</em:iconURL>
     <em:creator>Sauce Labs</em:creator>
     <em:developer>David Stark</em:developer>
     <em:description>Activate Sauce Connect from your browser.</em:description>
