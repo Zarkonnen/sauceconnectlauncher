@@ -7,5 +7,5 @@
 }
 
 .toolbar-starting {
-	list-style-image: URL("chrome://sauceconnectlauncher/skin/status-bar-connecting.gif");
+	list-style-image: URL("chrome://sauceconnectlauncher/skin/status-bar-connecting.png");
 }
